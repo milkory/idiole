@@ -48,11 +48,6 @@ const board = computed(() => props.content as Array<Array<Tile>>);
   color: #fff;
 }
 
-.character {
-  font-size: 30px;
-  margin: 5px 0;
-}
-
 .tile.empty {
   border: 2px solid #d3d6da;
   height: 60px;

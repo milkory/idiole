@@ -20,5 +20,6 @@ defineProps({ message: String });
   transform: translateX(-50%);
   padding: 12px 16px;
   border-radius: 4px;
+  z-index: 2;
 }
 </style>

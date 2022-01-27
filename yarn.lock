@@ -54,6 +54,11 @@
     semver "^7.3.5"
     tar "^6.1.11"
 
+"@types/pinyin@^2.10.0":
+  version "2.10.0"
+  resolved "https://registry.yarnpkg.com/@types/pinyin/-/pinyin-2.10.0.tgz#074964ec2f777d632e221f927a975bb7d51ded9a"
+  integrity sha512-YLty6FPYiBgxNbQNaTRJquvflRdG026jjOpjNXR7HdGEJPGtmPBp1x9LkWePCNA/ClaTT0hYem080TbRCMLbew==
+
 "@vitejs/plugin-vue@^2.0.0":
   version "2.1.0"
   resolved "https://registry.yarnpkg.com/@vitejs/plugin-vue/-/plugin-vue-2.1.0.tgz#ddf5e0059f84f2ff649afc25ce5a59211e670542"
@@ -295,11 +300,6 @@ character-parser@^2.2.0:
   integrity sha1-x84o821LzZdE5f/CxfzeHHMmH8A=
   dependencies:
     is-regex "^1.0.3"
-
-chinese-idiom-chengyu@^1.1.0:
-  version "1.1.0"
-  resolved "https://registry.yarnpkg.com/chinese-idiom-chengyu/-/chinese-idiom-chengyu-1.1.0.tgz#d2c801ce66e569004e02ed79d6875111b8dcc01e"
-  integrity sha512-FsKX3U7svCIAx/t1QPaUzrNZTVUuH5POlEdyEVJdZzEPZL2M07hWS7dmxZvLr/N/8R7Jq6rBIMfREjcnLqo4cg==
 
 chownr@^2.0.0:
   version "2.0.0"

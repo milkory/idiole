@@ -1,3 +1,7 @@
+html, body {
+  height: 100%;
+}
+
 body {
   max-width: 500px;
   text-align: center;
@@ -10,4 +14,9 @@ body {
 
 .fade-enter-from, .fade-leave-to {
   opacity: 0;
+}
+
+.character {
+  font-size: 30px;
+  transform: translateY(-1px);
 }

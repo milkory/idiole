@@ -3,14 +3,19 @@ import { ref } from 'vue';
 import Header from './components/Header.vue';
 import Toast from './components/Toast.vue';
 import Board from './components/Board.vue';
+import Input from './components/Input.vue';
 import { Tile, TileState } from './types';
+import idioms from './idioms';
 
-let toastMessage = ref('');
+const answer = idioms.today();
+
+let toastMessage = ref(`${answer.idiom}, ${answer.pinyin}`);
 let toastTimeout: number;
 
 const board = ref(new Array<Array<Tile>>());
-board.value.push([new Tile('四', TileState.Absent), new Tile('字', TileState.Present), new Tile('成', TileState.Almost), new Tile('语', TileState.Exact)]);
-board.value.push([new Tile('四', TileState.Empty), new Tile('字', TileState.Empty), new Tile('', TileState.Empty), new Tile('', TileState.Empty)]);
+
+board.value.push(Tile.fromGuess('尊猪啊啧', answer));
+board.value.push(Tile.newLine());
 
 function toast(message: string, time = 2000) {
   toastMessage.value = message;
@@ -21,6 +26,40 @@ function toast(message: string, time = 2000) {
     }, time);
   }
 }
+
+function input(content: string) {
+  let line = getLastLine();
+  for (let character of content.split('')) {
+    let tile = line.find(it => !it.isFilled());
+    if (tile) {
+      tile.character = character;
+    } else {
+      break;
+    }
+  }
+}
+
+function clearTile() {
+  let line = getLastLine();
+  let tile = line.reverse().find(it => it.isFilled());
+  line.reverse();
+  if (tile) {
+    tile.character = ''
+  }
+}
+
+function submit() {
+  let line = getLastLine();
+  if (line.some(it => !it.isFilled())) {
+    toast('NOT SO FAST!')
+  } else {
+    toast('SUBMITTED! But nothing happened :<')
+  }
+}
+
+function getLastLine() {
+  return board.value[board.value.length - 1];
+}
 </script>
 
 <template>
@@ -28,6 +67,7 @@ function toast(message: string, time = 2000) {
   <div class="game">
     <Header @help="toast('TODO')" @stat="toast('TODO')" @setting="toast('TODO')" />
     <Board :content="board" />
+    <Input @input="input" @submit="submit" @delete="clearTile" />
   </div>
 </template>
 
@@ -38,12 +78,13 @@ function toast(message: string, time = 2000) {
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
+  height: 100%;
 }
 
 .game {
   display: flex;
   flex-direction: column;
-  height: 100vh;
+  height: 100%;
   margin: 0 auto;
 }
 </style>
