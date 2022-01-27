@@ -31,6 +31,7 @@ defineEmits(['help', 'stat', 'setting']);
 }
 
 .title {
+  color: #000;
   font-weight: 700;
   font-size: 36px;
   letter-spacing: 0.2rem;

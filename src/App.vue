@@ -2,9 +2,15 @@
 import { ref } from 'vue';
 import Header from './components/Header.vue';
 import Toast from './components/Toast.vue';
+import Board from './components/Board.vue';
+import { Tile, TileState } from './types';
 
 let toastMessage = ref('');
 let toastTimeout: number;
+
+const board = ref(new Array<Array<Tile>>());
+board.value.push([new Tile('四', TileState.Absent), new Tile('字', TileState.Present), new Tile('成', TileState.Almost), new Tile('语', TileState.Exact)]);
+board.value.push([new Tile('四', TileState.Empty), new Tile('字', TileState.Empty), new Tile('', TileState.Empty), new Tile('', TileState.Empty)]);
 
 function toast(message: string, time = 2000) {
   toastMessage.value = message;
@@ -18,9 +24,11 @@ function toast(message: string, time = 2000) {
 </script>
 
 <template>
-  <!-- <Poptip :message="poptipMessage" /> -->
   <Toast :message="toastMessage" />
-  <Header @help="toast('TODO')" @stat="toast('TODO')" @setting="toast('TODO')" />
+  <div class="game">
+    <Header @help="toast('TODO')" @stat="toast('TODO')" @setting="toast('TODO')" />
+    <Board :content="board" />
+  </div>
 </template>
 
 <style>
@@ -30,5 +38,12 @@ function toast(message: string, time = 2000) {
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
+}
+
+.game {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  margin: 0 auto;
 }
 </style>
