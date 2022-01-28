@@ -12,3 +12,4 @@ jobs:
           username: 'milkory'
           reponame: 'idiole'
           token: ${{ secrets.TOKEN }}
+          useyarn: true
