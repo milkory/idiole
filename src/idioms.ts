@@ -1,17 +1,20 @@
 import { Idiom } from './types';
-import idiomToPinyinData from './data/WordPinyinPairs.json';
+import idiomEasyData from './data/idiole_easy.json';
+import idiomAdditionData from './data/idiole_addition.json';
 
-const idiomToPinyinMap = Object.entries(idiomToPinyinData);
+const idiomEasyMap = Object.entries(idiomEasyData);
+const idiomAddtionMap = Object.entries(idiomAdditionData);
 
 function today(): Idiom {
   const date = new Date(Date.now()).setHours(0, 0, 0, 0);
-  const index = Math.ceil(mulberry32(date) * idiomToPinyinMap.length);
-  const entry = idiomToPinyinMap[index];
+  const index = Math.ceil(mulberry32(date) * idiomEasyMap.length);
+  const entry = idiomEasyMap[index];
   return new Idiom(entry[0], entry[1], date);
 }
 
 function get(idiom: string) {
-  let result = idiomToPinyinMap.find(it => it[0] == idiom);
+  let result = idiomEasyMap.find(it => it[0] == idiom);
+  if (!result) result = idiomAddtionMap.find(it => it[0] == idiom);
   return result && new Idiom(result[0], result[1]);
 }
 

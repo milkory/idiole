@@ -60,7 +60,7 @@ export class Tile {
 
   static transfromTiles(tiles: Tile[], answer: Idiom) {
     let result = this.fromTiles(tiles, answer);
-    if (result == null) return false;
+    if (!result) return false;
     for (let i in tiles) {
       tiles[i] = result[i];
     }
@@ -69,7 +69,7 @@ export class Tile {
 
   static rubyTiles(tiles: Tile[]) {
     let idiom = idioms.get(this.toString(tiles));
-    if (idiom == null) return false;
+    if (!idiom) return false;
     let splitPinyin = idiom.pinyin.split(' ');
     for (let i in tiles) {
       tiles[i].pinyin = splitPinyin[i];
