@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref } from 'vue';
+import { Ref, ref } from 'vue';
 import Header from './components/Header.vue';
 import Toast from './components/Toast.vue';
 import Board from './components/Board.vue';
@@ -15,6 +15,7 @@ let toastTimeout: number;
 let isGameEnd = ref(false);
 
 const board = ref(new Array<Array<Tile>>());
+const boardElement = ref() as Ref<any>;
 
 storage.load();
 Tile.fromGuesses(storage.getTodayGuess(), answer).forEach(it => board.value.push(it));
@@ -88,11 +89,12 @@ function submit() {
       storage.pushGuess(Tile.toString(line));
       clearHighlight();
       if (checkWin()) {
-        toast('你赢🌶️')
-        isGameEnd.value = true
+        toast('你赢🌶️');
+        isGameEnd.value = true;
       } else {
         newLine();
       }
+      setTimeout(() => boardElement.value.scrollToTheEnd(), 1);
     }
   }
 }
@@ -120,7 +122,7 @@ function clearHighlight() {
   <Toast :message="toastMessage" />
   <div class="game">
     <Header @help="toast('TODO')" @stat="toast('TODO')" @setting="toast('TODO')" />
-    <Board :content="board" />
+    <Board :content="board" ref="boardElement" />
     <Input @input="input" @submit="submit" @delete="clearTile" :is-game-end="isGameEnd" />
   </div>
 </template>

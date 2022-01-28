@@ -1,13 +1,23 @@
 <script setup lang="ts">
-import { computed } from 'vue';
+import { computed, Ref, ref } from 'vue';
 import { Tile } from '../types';
 
 const props = defineProps({ content: Array });
 const board = computed(() => props.content as Tile[][]);
+defineExpose({ scrollToTheEnd });
+
+const container = ref() as Ref<HTMLDivElement>;
+
+function scrollToTheEnd() {
+  let ele = container.value;
+  if (ele.scrollHeight > ele.clientHeight) {
+    ele.scrollTop = ele.scrollHeight;
+  }
+}
 </script>
 
 <template>
-  <div class="board-container">
+  <div class="board-container" ref="container">
     <div class="board">
       <div class="line" v-for="line in board">
         <div v-for="tile in line" :class="['tile', tile.state, tile.character && 'filled']">
