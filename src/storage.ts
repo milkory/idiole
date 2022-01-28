@@ -3,11 +3,11 @@ let lastPlayed = 0;
 
 function load() {
   const today = new Date(Date.now()).setHours(0, 0, 0, 0);
+  lastPlayed = parseInt(localStorage.getItem('idiole:stat.last_played') || '0');  
   if (today != lastPlayed) {
     localStorage.removeItem('idiole:today.guess');
   }
   todayGuess = localStorage.getItem('idiole:today.guess')?.split(' ') || [];
-  lastPlayed = parseInt(localStorage.getItem('idiole:stat.last_played') || '0');
 }
 
 function pushGuess(guess: string) {
