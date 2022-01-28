@@ -26,6 +26,7 @@ export class Tile {
     const splitGuessPinyin = idioms.removePinyinTone(guessIdiom.pinyin).split(' ');
     const splitAnswerPinyin = idioms.removePinyinTone(answer.pinyin).split(' ');
     const splitGuessPinyinWithTone = guessIdiom.pinyin.split(' ');
+    const splitAnswerPinyinWithTone = answer.pinyin.split(' ');
 
     for (let i = 0; i <= 3; i++) {
       const _guess = splitGuess[i];
@@ -40,9 +41,15 @@ export class Tile {
             if (splitGuessPinyin[j] != splitAnswerPinyin[j]) {
               if (splitGuessPinyin[i] == splitAnswerPinyin[j]) {
                 state = TileState.Present;
+                break;
               }
             }
           }
+        }
+      }
+      if (state == TileState.Absent) {
+        if (idioms.getPinyinTone(splitGuessPinyinWithTone[i]) == idioms.getPinyinTone(splitAnswerPinyinWithTone[i])) {
+          state = TileState.Little;
         }
       }
       list.push(new Tile(_guess, splitGuessPinyinWithTone[i], state));
@@ -87,6 +94,7 @@ export const enum TileState {
   Almost = 'almost',
   Present = 'present',
   Absent = 'absent',
+  Little = 'little',
   Empty = 'empty',
 }
 

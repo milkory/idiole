@@ -29,16 +29,36 @@ function removePinyinTone(pinyin: string): string {
   return pinyin
     .replace(/[āáǎà]/g, 'a')
     .replace(/[ēéěè]/g, 'e')
-    .replace(/[ōóòò]/g, 'o')
+    .replace(/[ōóǒò]/g, 'o')
     .replace(/[īíǐì]/g, 'i')
     .replace(/[ūúǔù]/g, 'u')
-    .replace(/[üǘǚǜ]/g, 'v');
+    .replace(/[üǖǘǚǜ]/g, 'v');
 }
 
 function isPinyinSimilar(a: string, b: string) {
-  return removePinyinTone(a) == removePinyinTone(b);
+  return simplifyPinyin(a) == simplifyPinyin(b);
+}
+
+function removePinyinNg(pinyin: string) {
+  return pinyin.endsWith('g') ? pinyin.substring(0, pinyin.length - 1) : pinyin;
+}
+
+function simplifyPinyin(pinyin: string) {
+  return removePinyinTone(removePinyinNg(pinyin));
+}
+
+function getPinyinTone(pinyin: string) {
+  if (pinyin.match(/[āēōīūǖ]/)) return 1;
+  else if (pinyin.match(/[áéóíúǘ]/)) return 2;
+  else if (pinyin.match(/[ǎěǒǐǔǚ]/)) return 3;
+  else if (pinyin.match(/[àèòìùǜ]/)) return 4;
+  else return 0;
 }
 
 export default {
-  today, get, removePinyinTone, isPinyinSimilar
+  today,
+  get,
+  removePinyinTone,
+  isPinyinSimilar,
+  getPinyinTone,
 };

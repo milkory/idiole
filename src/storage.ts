@@ -3,18 +3,18 @@ let todayGuess: string[] = [];
 let lastPlayed = 0;
 
 function load() {
-  todayGuess = localStorage.getItem('today_guess')?.split(' ') || [];
-  lastPlayed = parseInt(localStorage.getItem('last_played') || '0');
+  todayGuess = localStorage.getItem('idiole:today.guess')?.split(' ') || [];
+  lastPlayed = parseInt(localStorage.getItem('idiole:stat.last_played') || '0');
 }
 
 function pushGuess(guess: string) {
   todayGuess.push(guess);
-  localStorage.setItem('today_guess', todayGuess.join(' '));
+  localStorage.setItem('idiole:today.guess', todayGuess.join(' '));
 }
 
 function pushLastPlayed(timestamp: number) {
   lastPlayed = timestamp;
-  localStorage.setItem('last_played', timestamp.toString())
+  localStorage.setItem('idiole:stat.last_played', timestamp.toString())
 }
 
 function getTodayGuess() {

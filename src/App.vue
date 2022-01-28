@@ -17,6 +17,9 @@ let isGameEnd = ref(false);
 const board = ref(new Array<Array<Tile>>());
 const boardElement = ref() as Ref<any>;
 
+let shakeIndex = ref(-1);
+let shakeTimeout: number;
+
 storage.load();
 Tile.fromGuesses(storage.getTodayGuess(), answer).forEach(it => board.value.push(it));
 storage.pushLastPlayed(answer.date);
@@ -31,9 +34,7 @@ function toast(message: string, time = 2000) {
   toastMessage.value = message;
   if (time > 0) {
     clearTimeout(toastTimeout);
-    toastTimeout = setTimeout(() => {
-      toastMessage.value = '';
-    }, time);
+    toastTimeout = setTimeout(() => (toastMessage.value = ''), time);
   }
 }
 
@@ -82,18 +83,22 @@ function submit() {
   let line = getLastLine();
   if (line.some(it => !it.isFilled())) {
     toast('填完再提交😠');
+    shake();
   } else {
     if (!Tile.transfromTiles(line, answer)) {
       toast('不知所云');
+      shake();
     } else {
       storage.pushGuess(Tile.toString(line));
       clearHighlight();
-      if (checkWin()) {
-        toast('你赢🌶️');
-        isGameEnd.value = true;
-      } else {
-        newLine();
-      }
+      boardElement.value.submit(() => {
+        if (checkWin()) {
+          toast('你赢🌶️');
+          isGameEnd.value = true;
+        } else {
+          newLine();
+        }
+      });
       setTimeout(() => boardElement.value.scrollToTheEnd(), 1);
     }
   }
@@ -111,7 +116,11 @@ function checkWin() {
   return board.value.length > 0 && getLastLine().every(it => it.state == TileState.Exact);
 }
 
-function shake() {}
+function shake() {
+  shakeIndex.value = board.value.length - 1;
+  clearTimeout(shakeTimeout);
+  setTimeout(() => (shakeIndex.value = -1), 1000);
+}
 
 function clearHighlight() {
   board.value.forEach(line => line.forEach(tile => (tile.highlightPinyin = false)));
@@ -122,7 +131,7 @@ function clearHighlight() {
   <Toast :message="toastMessage" />
   <div class="game">
     <Header @help="toast('TODO')" @stat="toast('TODO')" @setting="toast('TODO')" />
-    <Board :content="board" ref="boardElement" />
+    <Board :content="board" :shake-index="shakeIndex" ref="boardElement" />
     <Input @input="input" @submit="submit" @delete="clearTile" :is-game-end="isGameEnd" />
   </div>
 </template>
