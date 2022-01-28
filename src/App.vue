@@ -6,16 +6,25 @@ import Board from './components/Board.vue';
 import Input from './components/Input.vue';
 import { Tile, TileState } from './types';
 import idioms from './idioms';
+import storage from './storage';
 
 const answer = idioms.today();
 
-let toastMessage = ref(`${answer.idiom}, ${answer.pinyin}`);
+let toastMessage = ref('');
 let toastTimeout: number;
+let isGameEnd = ref(false);
 
 const board = ref(new Array<Array<Tile>>());
 
-board.value.push(Tile.fromGuess('尊猪啊啧', answer));
-board.value.push(Tile.newLine());
+storage.load();
+Tile.fromGuesses(storage.getTodayGuess(), answer).forEach(it => board.value.push(it));
+storage.pushLastPlayed(answer.date);
+
+if (checkWin()) {
+  isGameEnd.value = true;
+} else {
+  newLine();
+}
 
 function toast(message: string, time = 2000) {
   toastMessage.value = message;
@@ -29,12 +38,28 @@ function toast(message: string, time = 2000) {
 
 function input(content: string) {
   let line = getLastLine();
+  let inputted = false;
   for (let character of content.split('')) {
     let tile = line.find(it => !it.isFilled());
     if (tile) {
       tile.character = character;
+      inputted = true;
     } else {
       break;
+    }
+  }
+  if (line[3].isFilled()) {
+    Tile.rubyTiles(line);
+    for (let tile of line) {
+      for (let i = 0; i < board.value.length - 1; i++) {
+        let checkLine = board.value[i];
+        for (let checkTile of checkLine) {
+          if (idioms.isPinyinSimilar(tile.pinyin, checkTile.pinyin)) {
+            tile.highlightPinyin = true;
+            checkTile.highlightPinyin = true;
+          }
+        }
+      }
     }
   }
 }
@@ -44,21 +69,50 @@ function clearTile() {
   let tile = line.reverse().find(it => it.isFilled());
   line.reverse();
   if (tile) {
-    tile.character = ''
+    tile.character = '';
+    if (tile.pinyin) {
+      line.forEach(it => (it.pinyin = ''));
+      clearHighlight();
+    }
   }
 }
 
 function submit() {
   let line = getLastLine();
   if (line.some(it => !it.isFilled())) {
-    toast('NOT SO FAST!')
+    toast('填完再提交😠');
   } else {
-    toast('SUBMITTED! But nothing happened :<')
+    if (!Tile.transfromTiles(line, answer)) {
+      toast('不知所云');
+    } else {
+      storage.pushGuess(Tile.toString(line));
+      clearHighlight();
+      if (checkWin()) {
+        toast('你赢🌶️')
+        isGameEnd.value = true
+      } else {
+        newLine();
+      }
+    }
   }
+}
+
+function newLine() {
+  board.value.push(Tile.newLine());
 }
 
 function getLastLine() {
   return board.value[board.value.length - 1];
+}
+
+function checkWin() {
+  return board.value.length > 0 && getLastLine().every(it => it.state == TileState.Exact);
+}
+
+function shake() {}
+
+function clearHighlight() {
+  board.value.forEach(line => line.forEach(tile => (tile.highlightPinyin = false)));
 }
 </script>
 
@@ -67,7 +121,7 @@ function getLastLine() {
   <div class="game">
     <Header @help="toast('TODO')" @stat="toast('TODO')" @setting="toast('TODO')" />
     <Board :content="board" />
-    <Input @input="input" @submit="submit" @delete="clearTile" />
+    <Input @input="input" @submit="submit" @delete="clearTile" :is-game-end="isGameEnd" />
   </div>
 </template>
 

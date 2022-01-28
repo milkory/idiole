@@ -3,7 +3,7 @@ import { computed } from 'vue';
 import { Tile } from '../types';
 
 const props = defineProps({ content: Array });
-const board = computed(() => props.content as Array<Array<Tile>>);
+const board = computed(() => props.content as Tile[][]);
 </script>
 
 <template>
@@ -11,7 +11,10 @@ const board = computed(() => props.content as Array<Array<Tile>>);
     <div class="board">
       <div class="line" v-for="line in board">
         <div v-for="tile in line" :class="['tile', tile.state, tile.character && 'filled']">
-          <div class="character">
+          <div class="character" :class="[tile.pinyin && 'parsed']">
+            <div class="ruby" :class="[tile.highlightPinyin && 'highlight']">
+              {{ tile.pinyin }}
+            </div>
             {{ tile.character }}
           </div>
         </div>
@@ -27,6 +30,9 @@ const board = computed(() => props.content as Array<Array<Tile>>);
   align-items: center;
   flex-wrap: wrap;
   flex-grow: 1;
+  overflow: auto;
+  max-height: 80%;
+  margin: 10px;
 }
 
 .board {
@@ -37,6 +43,29 @@ const board = computed(() => props.content as Array<Array<Tile>>);
 .line {
   display: grid;
   grid-template-columns: repeat(4, 68px);
+}
+
+.character {
+  transform: translateY(1px);
+  line-height: 24px;
+}
+
+.character.parsed {
+  transform: translateY(-6px);
+}
+
+.ruby {
+  font-size: 12px;
+  letter-spacing: 0.5px;
+  transform: translateX(0.5px);
+}
+
+.highlight {
+  color: yellow;
+}
+
+.empty .highlight {
+  color: royalblue;
 }
 
 .tile {

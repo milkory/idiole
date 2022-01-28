@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { onMounted, onUnmounted } from 'vue';
 
+const props = defineProps({ isGameEnd: Boolean });
 const emit = defineEmits(['input', 'submit', 'delete']);
 
 let isComposing = false;
@@ -23,6 +24,7 @@ function onCompositionEnd(e: Event) {
 }
 
 function onKeyDown(e: KeyboardEvent) {
+  if (props.isGameEnd) return;
   let key = e.key;
   if (key === 'Backspace') {
     emit('delete');
@@ -43,6 +45,7 @@ onUnmounted(() => window.removeEventListener('keydown', onKeyDown));
         @compositionstart="onCompositionStart"
         @compositionend="onCompositionEnd"
         class="input character"
+        :disabled="isGameEnd"
       />
     </div>
   </div>
