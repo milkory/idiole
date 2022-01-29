@@ -9,8 +9,9 @@ import idioms from './idioms';
 import storage from './storage';
 
 const answer = idioms.today();
+const tip = `神奇的兔子偷偷告诉了你答案中第一个字的拼音：${idioms.removePinyinTone(answer.pinyin.split(' ')[0])}`;
 
-let toastMessage = ref('');
+let toastMessage = ref(tip);
 let toastTimeout: number;
 let isGameEnd = ref(false);
 
@@ -130,7 +131,7 @@ function clearHighlight() {
 <template>
   <Toast :message="toastMessage" />
   <div class="game">
-    <Header @help="toast('TODO')" @stat="toast('TODO')" @setting="toast('TODO')" />
+    <Header @help="toast(tip)" @stat="toast('TODO')" @setting="toast('TODO')" />
     <Board :content="board" :shake-index="shakeIndex" ref="boardElement" />
     <Input @input="input" @submit="submit" @delete="clearTile" :is-game-end="isGameEnd" />
   </div>
