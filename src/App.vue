@@ -11,7 +11,7 @@ import storage from './storage';
 const answer = idioms.today();
 const tip = `神奇的兔子偷偷告诉了你答案中第一个字的拼音：${idioms.removePinyinTone(answer.pinyin.split(' ')[0])}`;
 
-let toastMessage = ref(tip);
+let toastMessage = ref();
 let toastTimeout: number;
 let isGameEnd = ref(false);
 
@@ -27,8 +27,10 @@ storage.pushLastPlayed(answer.date);
 
 if (checkWin()) {
   isGameEnd.value = true;
+  toast('明天再来吧！', 0)
 } else {
   newLine();
+  toast('点击左上角问号获取提示🐇')
 }
 
 function toast(message: string, time = 2000) {
