@@ -9,7 +9,7 @@ import idioms from './idioms';
 import storage from './storage';
 
 const answer = idioms.today();
-const tip = `神奇的兔子偷偷告诉了你答案中第三个字的拼音：${idioms.removePinyinTone(answer.pinyin.split(' ')[2])}<br><br>绿色：完全正确<br>紫色：拼音对，字错<br>黄色：拼音对，位错<br>砖色：只有声调正确<br>灰色：不存在该拼音`;
+const tip = `神奇的兔子偷偷告诉了你答案中第三个字的拼音：${idioms.removePinyinTone(answer.pinyin.split(' ')[2])}\n\n绿色：完全正确\n紫色：拼音对，字错\n黄色：拼音对，位错\n砖色：只有声调正确\n灰色：不存在该拼音`;
 
 let toastMessage = ref();
 let toastTimeout: number;
